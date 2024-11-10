@@ -3,7 +3,7 @@ Is a npm package used to validate inputs.
 
 Install Package:
 ```cli
-  npm i {package name}
+  npm i @mitchell-collins/validator
 ```
 
 The `validator` is used to validate inputs.
@@ -23,8 +23,8 @@ The `validator` has multiply methods these include:
 
 The `checkSuperClass` and `checkSuperClassArray` methods require that you create a attribute that holds the name of the super class which has a getter method: `getSuper`.
 You can use {super class package} which defines a super attribute that holds the name of the super class along with getter and setter methods. Which can be accessed here:
-- {super class repo url}
-- {super class package url}
+- https://github.com/MitchellCollins/SuperClass
+- https://www.npmjs.com/package/@mitchell-collins/SuperClass
 
 Examples:
 ```javascript
