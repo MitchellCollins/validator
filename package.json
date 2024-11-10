@@ -1,0 +1,21 @@
+{
+  "name": "@mitchell-collins/validator",
+  "version": "1.0.0",
+  "description": "Used to validate inputs",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MitchellCollins/validator.git"
+  },
+  "author": "Mitchell Collins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MitchellCollins/validator/issues"
+  },
+  "homepage": "https://github.com/MitchellCollins/validator#readme"
+}
