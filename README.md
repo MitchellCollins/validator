@@ -22,9 +22,9 @@ The `validator` has multiply methods these include:
 - `checkSuperClassArray` - checks each instance in a array if they are the child of the requested super class
 
 The `checkSuperClass` and `checkSuperClassArray` methods require that you create a attribute that holds the name of the super class which has a getter method: `getSuper`.
-You can use {super class package} which defines a super attribute that holds the name of the super class along with getter and setter methods. Which can be accessed here:
+You can use `superclass` which defines a super attribute that holds the name of the super class along with getter and setter methods. Which can be accessed here:
 - https://github.com/MitchellCollins/SuperClass
-- https://www.npmjs.com/package/@mitchell-collins/SuperClass
+- https://www.npmjs.com/package/@mitchell-collins/superclass
 
 Examples:
 ```javascript
