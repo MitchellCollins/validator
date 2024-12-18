@@ -16,15 +16,15 @@
  * 
  * Examples:
  * 
- *      function squareNumber(number) {
- *          validator.checkUndefined(number);
- *          validator.checkDataType(number, "number");
- *          return number * number;
+ *      function squareNumber(num) {
+ *          validator.checkUndefined(num, "num");
+ *          validator.checkDataType(num, "num", "number");
+ *          return num * num;
  *      }
  * 
  *      function addNumbers(num1, num2) {
- *          validator.checkUndefinedArray([num1, num2]);
- *          validator.checkDataTypeArray([num1, num2], "number");
+ *          validator.checkUndefinedArray([num1, num2], ["num1", "num2"]);
+ *          validator.checkDataTypeArray([num1, num2], ["num1", "num2"], "number");
  *          return num1 + num2;
  *      }
  */
@@ -32,64 +32,118 @@ const validator = {
 
     /**
      * Used to check if a `variable` is undefined. If so a error is thrown.
+     * 
+     * `variableName` is used to specify which argument was left undefined.
+     * 
      * @param {*} variable 
+     * @param {String} variableName
      */
-    checkUndefined: function (variable) {
-        if (variable === undefined) throw new Error("Argument left undefined");
+    checkUndefined: function (variable, variableName) {
+        if (variable === undefined) throw new Error(variableName + " Argument left Undefined");
     },
 
     /**
-     * Used to check variables in an `array` if they are undefined. If so a error is thrown.
-     * @param {Array<*>} array 
+     * Used to check if an array of `variables` are undefined. If so a error is thrown.
+     * 
+     * The `variableNames` array is used to specify which argument was left undefined. Ensure that the variable and variable name 
+     * are in the same index in their array.
+     * 
+     * Example:
+     * 
+     *      function addNumbers(num1, num2) {
+     *          // ensure that variable and variable names are in the same index in their array
+     *          validator.checkUndefinedArray([num1, num2], ["num1", "num2"]);
+     * 
+     *          return num1 + num2;
+     *      }
+     * 
+     * @param {Array<*>} variables
+     * @param {Array<String>} variableNames 
      */
-    checkUndefinedArray: function (array) {
-        array.forEach((element) => {
-            this.checkUndefined(element);
-        });
+    checkUndefinedArray: function (variables, variableNames) {
+        for (let i = 0; i < variables.length; i++) {
+            this.checkUndefined(variables[i], variableNames[i]);
+        }
     },
 
     /**
      * Used to check if the datetype of a `variable` is equal to the specified `dataType`.
      * If not a error is thrown.
+     * 
+     * `variableName` is used to specify which argument was provided the incorrect datatype.
+     * 
      * @param {*} variable 
+     * @param {String} variableName
      * @param {String} dataType 
      */
-    checkDataType: function (variable, dataType) {
-        if (typeof variable !== dataType) throw new Error("Incorrect DataType for Argument");
+    checkDataType: function (variable, variableName, dataType) {
+        if (typeof variable !== dataType) throw new Error(`Must provide ${dataType} datatype for ${variableName} Argument`);
     },
 
     /**
-     * Used to check if the dataype of variables in a `array` are equal to the specified `datatype`.
+     * Used to check if the dataype of an array of `variables` are equal to the specified `datatype`.
      * If not a error is thrown.
-     * @param {Array<*>} array 
+     * 
+     * The `variableNames` array is used to specify which argument was provided the incorrect datatype. Ensure that the variable and 
+     * variable name are in the same index in their array.
+     * 
+     *  Example:
+     * 
+     *      function addNumbers(num1, num2) {
+     *          // ensure that variable and variable names are in the same index in their array
+     *          validator.checkDataTypeArray([num1, num2], ["num1", "num2"], "number");
+     * 
+     *          return num1 + num2;
+     *      }
+     * 
+     * @param {Array<*>} variables 
+     * @param {Array<String>} variableNames
      * @param {String} dataType 
      */
-    checkDataTypeArray: function (array, dataType) {
-        array.forEach((element) => {
-            this.checkDataType(element, dataType);
-        });
+    checkDataTypeArray: function (variables, variableNames, dataType) {
+        for (let i = 0; i < variables.length; i++) {
+            this.checkDataType(variables[i], variableNames[i], dataType);
+        }
     },
 
     /**
      * Used to check if the instancetype of a `instance` is equal to specified `instanceType`.
      * If not a error is thrown.
+     * 
+     * `instanceName` is used to specify which argument was provided the incorrect instancetype.
+     * 
      * @param {InstanceType<*>} instance 
+     * @param {String} instanceName
      * @param {String} instanceType 
      */
-    checkInstanceType: function (instance, instanceType) {
-        if (instance.constructor.name !== instanceType) throw new Error("Incorrect InstanceType for Argument");
+    checkInstanceType: function (instance, instanceName, instanceType) {
+        if (instance.constructor.name !== instanceType) throw new Error(`
+            Must provide ${instanceType} instancetype for ${instanceName} Argument`
+        );
     },
 
     /**
      * Used to check if an instancetype of instances in a `array` are equal to the specified `instanceType`.
      * If not a error is thrown.
-     * @param {Array<InstanceType<*>>} array 
+     * 
+     * The `instanceNames` array is used to specify which argument was provided the incorrect instancetype. Ensure that the instance 
+     * and instance name are in the same index in their array.
+     * 
+     * Example:
+     * 
+     *      function combineItems(item1, item2) {
+     *          validator.checkInstanceTypeArray([item1, item2], ["item1", "item2"], "Item");
+     *          // ...
+     *      }
+     * 
+     * @param {Array<InstanceType<*>>} instances 
+     * @param {Array<String>} instanceNames
      * @param {String} instanceType 
      */
-    checkInstanceTypeArray: function (array, instanceType) {
-        array.forEach((element) => {
-            this.checkInstanceType(element, instanceType);
-        });
+    checkInstanceTypeArray: function (instances, instanceNames, instanceType) {
+        for (let i = 0; i < instances.length; i++) {
+            this.checkInstanceType(instances[i], instanceNames[i], instanceType);
+        }
     },
 
     /**
@@ -99,16 +153,20 @@ const validator = {
      * It does this by calling a getter method: `getSuper`, (which you will have to define in your super classes)
      * to retrieve the name of the super class.
      * 
-     * Use npm package `SuperClass` here: {insert npm link}
+     * Use npm package `SuperClass` here: https://www.npmjs.com/package/@mitchell-collins/superclass
      * 
      * Which is used to create a super class giving the attrbute super along with getter and setter methods 
      * which holds the name of the super class.
+     * 
+     * `instanceName` is used to specify which argument was provided the incorrect child instancetype of a super class.
+     * 
      * @param {InstanceType<*>} instance 
+     * @param {String} instanceName
      * @param {String} superClass 
      */
-    checkSuperClass: function (instance, superClass) {
+    checkSuperClass: function (instance, instanceName, superClass) {
         if (instance.getSuper() !== superClass) throw new Error(
-            "Instance is a Child of the Incorrect Super Class for Argument"
+            `Must provide instancetype that is a child of ${superClass} Superclass for ${instanceName} Argument`
         );
     },
 
@@ -119,17 +177,29 @@ const validator = {
      * It does this by calling a getter method: `getSuper`, (which you will have to define in your super classes)
      * to retrieve the name of the super class.
      * 
-     * Use npm package `SuperClass` here: {insert npm link}
+     * Use npm package `SuperClass` here: https://www.npmjs.com/package/@mitchell-collins/superclass
      * 
      * Which is used to create a super class giving the attrbute super along with getter and setter methods 
      * which holds the name of the super class.
-     * @param {Array<InstanceType<*>>} array 
+     * 
+     * The `instanceNames` array is used to specify which argument was provided the incorrect child instancetype of a super class. 
+     * Ensure that the instance and instance name are in the same index in their array.
+     * 
+     * Example:
+     * 
+     *      function combineItems(item1, item2) {
+     *          validator.checkSuperClassArray([item1, item2], ["item1", "item2"], "Item");
+     *          // ...
+     *      }
+     * 
+     * @param {Array<InstanceType<*>>} instances 
+     * @param {Array<String>} instanceNames
      * @param {String} superClass 
      */
-    checkSuperClassArray: function (array, superClass) {
-        array.forEach((element) => {
-            this.checkSuperClass(element, superClass);
-        });
+    checkSuperClassArray: function (instances, instanceNames, superClass) {
+        for (let i = 0; i < instances.length; i++) {
+            this.checkSuperClass(instances[i], instanceNames[i], superClass);
+        }
     }
 }
 
