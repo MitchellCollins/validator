@@ -61,6 +61,8 @@ const validator = {
      * @param {Array<String>} variableNames 
      */
     checkUndefinedArray: function (variables, variableNames) {
+        if (variables.length !== variableNames.length) throw new Error("Amount of variables and variable names must be equal");
+
         for (let i = 0; i < variables.length; i++) {
             this.checkUndefined(variables[i], variableNames[i]);
         }
@@ -101,6 +103,8 @@ const validator = {
      * @param {String} dataType 
      */
     checkDataTypeArray: function (variables, variableNames, dataType) {
+        if (variables.length !== variableNames.length) throw new Error("Amount of variables and variable names must be equal");
+
         for (let i = 0; i < variables.length; i++) {
             this.checkDataType(variables[i], variableNames[i], dataType);
         }
@@ -141,6 +145,8 @@ const validator = {
      * @param {String} instanceType 
      */
     checkInstanceTypeArray: function (instances, instanceNames, instanceType) {
+        if (instances.length !== instanceNames.length) throw new Error("Amount of instances and instance names must be equal");
+
         for (let i = 0; i < instances.length; i++) {
             this.checkInstanceType(instances[i], instanceNames[i], instanceType);
         }
@@ -197,6 +203,8 @@ const validator = {
      * @param {String} superClass 
      */
     checkSuperClassArray: function (instances, instanceNames, superClass) {
+        if (instances.length !== instanceNames.length) throw new Error("Amount of instances and instance names must be equal");
+
         for (let i = 0; i < instances.length; i++) {
             this.checkSuperClass(instances[i], instanceNames[i], superClass);
         }
