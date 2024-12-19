@@ -39,7 +39,7 @@ const validator = {
      * @param {String} variableName
      */
     checkUndefined: function (variable, variableName) {
-        if (variable === undefined) throw new Error(variableName + " Argument left Undefined");
+        if (variable === undefined) throw new Error(`'${variableName}' Argument left Undefined`);
     },
 
     /**
@@ -79,7 +79,7 @@ const validator = {
      * @param {String} dataType 
      */
     checkDataType: function (variable, variableName, dataType) {
-        if (typeof variable !== dataType) throw new Error(`Must provide ${dataType} datatype for ${variableName} Argument`);
+        if (typeof variable !== dataType) throw new Error(`Must provide ${dataType} datatype for '${variableName}' Argument`);
     },
 
     /**
@@ -122,7 +122,7 @@ const validator = {
      */
     checkInstanceType: function (instance, instanceName, instanceType) {
         if (instance.constructor.name !== instanceType) throw new Error(`
-            Must provide ${instanceType} instancetype for ${instanceName} Argument`
+            Must provide '${instanceType}' instancetype for '${instanceName}' Argument`
         );
     },
 
@@ -172,7 +172,7 @@ const validator = {
      */
     checkSuperClass: function (instance, instanceName, superClass) {
         if (instance.getSuper() !== superClass) throw new Error(
-            `Must provide instancetype that is a child of ${superClass} Superclass for ${instanceName} Argument`
+            `Must provide instancetype that is a child of '${superClass}' Superclass for '${instanceName}' Argument`
         );
     },
 
@@ -208,6 +208,190 @@ const validator = {
         for (let i = 0; i < instances.length; i++) {
             this.checkSuperClass(instances[i], instanceNames[i], superClass);
         }
+    },
+
+    /**
+     * Used to check if the value of a variable is an array. If not a error is thrown.
+     * 
+     * `arrayName` is used to specify which argument was not provided a value of an array.
+     * 
+     * @param {*} array 
+     * @param {String} arrayName 
+     */
+    checkIsArray: function (array, arrayName) {
+        if (!Array.isArray(array)) throw new Error(`Must provide an array for '${arrayName}' Argument`);
+    },
+
+    /**
+     * Used to check if a `array` has the required `targetLength`. If not a error is thrown.
+     * 
+     * `arrayName` is used to specify which argument was not provided an array that has the required `targetLength`.
+     * 
+     * @param {*} array 
+     * @param {String} arrayName 
+     * @param {Int} targetLength 
+     */
+    checkArrayLength: function (array, arrayName, targetLength) {
+        if (array.length !== targetLength) throw new Error(
+            `Must provided an array of a length of ${targetLength} for '${arrayName}' Argument`
+        );
+    },
+
+    /**
+     * Used to check if every element of an `array` fulfills a `condition`. If not a error is thrown.
+     * 
+     * `arrayName` is used to specify which argument has an element that doesn't fufill a `condition`.
+     * 
+     * The `callback` function is used to test if a element fulfills a `condition`, the function must return true or false.
+     * 
+     * The `condition` is used to specify what the `condition` is that needs to be fulfilled.
+     * 
+     * Example:
+     * 
+     *      // creates a callback function to check if a student is at the correct age
+     *      const checkAge = (studentAge) => studentAge >= 5 && studentAge <= 18;
+     * 
+     *      function enroleStudent(studentNames, studentAges) {
+     *          validator.checkArrayElements(studentAges, "studentAges", checkAge, "Age must be between 5 - 18");
+     *          // ...
+     *      }
+     * 
+     * @param {Array<*>} array 
+     * @param {String} arrayName 
+     * @param {CallableFunction} callback 
+     * @param {String} condition 
+     */
+    checkArrayElements: function (array, arrayName, callback, condition) {
+        array.forEach((element, index) => {
+            // calls provided callback function passing in each element of an array
+            // checks if the element doesn't fulfill a condition that is checked in the callback function
+            if (!callback(element)) throw new Error(
+                `Element at index ${index} of array argument '${arrayName}' doesn't fulfill condition: ${condition}`
+            );
+        });
+    },
+
+    /**
+     * Used to check if a provided `object` fulfills the required `structure`. If not a error is thown.
+     * 
+     * `objectName` is used to specify which `object` argument didn't fulfill the required `structure`.
+     * 
+     * `structure` is used to define the required structure of the provided `object`. It determines the required properties and what 
+     * datatypes those properties require.
+     * 
+     * When defining the datatype of a property you will have to get the constructor of that type and set it as a new instance 
+     * of that constructor. When defining a string datatype you have to define it as `new String`.
+     * 
+     * If you want to define the value of a property as a constructor then you can just define it like: `{property}: {constructor}`
+     * 
+     * The differences of defining the value as a constructor to a instance is when defining an instance you use the new keyword, also 
+     * if defining an instance and the constructor required arguments you will have to provided them, the value can be anything as 
+     * long as it is the correct datatype.
+     * 
+     * Example:
+     * 
+     *      // creates constructors
+     *      class Hobbie {
+     *          constructor(name) {
+     *              this.name = name;
+     *          }
+     *      }
+     * 
+     *      class Money {
+     *          constructor(amount) {
+     *              this.amount = amount;
+     *          }
+     *      }
+     * 
+     *      function findPerson(person) {
+     *          // checks structure of person object
+     *          validator.checkObjectStructure(person, "person", {
+     *              name: new String,
+     *              age: new Number,
+     *              friends: new Array,
+     *              hair: {
+     *                  color: new String
+     *              },
+     *              hobbie: new Hobbie("name"),
+     *              makeMoney: Money
+     *          });
+     *          // ...
+     *      }
+     * 
+     *      findPerson(
+     *          {
+     *              name: "Jack",
+     *              age: 30,
+     *              friends: ["John", "Ben"],
+     *              hair: {
+     *                  color: "black"
+     *              },
+     *              hobbie: new Hobbie("tennis"),
+     *              makeMoney: Money
+     *          }
+     *      );
+     * 
+     * @param {object} object 
+     * @param {String} objectName 
+     * @param {object} structure 
+     */
+    checkObjectStructure: function (object, objectName, structure) {
+        // loops through each property of the object
+        Object.entries(object).forEach(([key, value]) => {
+
+            // checks if property in object is in the specified strucuture
+            if (!structure[key]) throw new Error(
+                `'${objectName}' object argument was provided a property '${key}' which violates the required structure`
+            );
+
+            // if the datatype must be string then the func holds the value [Function: String]
+            const func = structure[key];
+
+            // checks if value is a instance or constructor
+            if (value.constructor) {
+
+                // checks if the required value is a constructor and that the provided value isn't the constructor
+                if (structure[key].constructor.name === "Function" && value.name !== structure[key].name) throw new Error(
+                    `'${objectName}' object argument is required to be provided the value of '${structure[key].name}' constructor`
+                );
+
+                // checks if the property value is the correct instance type
+                if (structure[key].constructor.name !== value.constructor.name) throw new Error(
+                    `
+                    '${objectName}' object argument is required to be provided the value of an instance of the 
+                    '${structure[key].constructor.name}' constructor
+                    `
+                );
+            }
+
+            // checks if property is array and required structure isn't
+            else if (Array.isArray(value)) {
+                if (!Array.isArray(structure[key])) throw new Error(
+                    `'${objectName}' object argument was provided for property '${key}' an array value which violates the required 
+                    structure`
+                );
+            }
+
+            // check if property is a object
+            // if so it loops through that object by calling this function
+            else if (typeof value === "object" && typeof structure[key] === "object") this.checkObjectStructure(
+                object[key], `${objectName}.${key}`, structure[key]
+            );
+
+            // checks if the value of property is the correct datatype specified in structure
+            // to check if it is the correct datatype of get the name of the func and convert it to lower case
+            else if (typeof value !== func.name.toLowerCase()) throw new Error(
+                `'${objectName}' object argument was provided a datatype of ${typeof value} for property '${key}' which violates the 
+                required structure`
+            );
+        });
+
+        // loops through each property of the structure 
+        // to find if the object is missing a property that is required
+        Object.entries(structure).forEach(([key]) => {
+            // checks if object doesn't have required property
+            if (!Object.hasOwn(object, key)) throw new Error(`'${objectName}' object argument missing required property '${key}'`);
+        });
     }
 }
 

@@ -20,6 +20,10 @@ The `validator` has multiply methods these include:
 - `checkInstanceTypeArray` - checks each instance in an array if are the requested instancetype
 - `checkSuperClass` - checks if a instance is a child of the requested super class
 - `checkSuperClassArray` - checks each instance in a array if they are the child of the requested super class
+- `checkIsArray` - checks if a varaible has the value that is an array
+- `checkArrayLength` - checks if the length of an array is equal to a specified target length
+- `checkArrayElements` - checks if all elements of an array fulfill a specified condition
+- `checkObjectStructure` - checks if the structure of an object fulfill the specified structure
 
 ## Explanation
 The `checkSuperClass` and `checkSuperClassArray` methods require that you create a attribute that holds the name of the super class which has a getter method: `getSuper`.
@@ -28,6 +32,8 @@ You can use `superclass` which defines a super attribute that holds the name of 
 - https://www.npmjs.com/package/@mitchell-collins/superclass
 
 ## Examples:
+
+### Undefined & DataType Methods
 ```javascript
     function squareNumber(num) {
       validator.checkUndefined(num, "num");
@@ -41,4 +47,57 @@ You can use `superclass` which defines a super attribute that holds the name of 
       validator.checkDataTypeArray([num1, num2], ["num1", "num2"], "number");
       return num1 + num2;
     }
+```
+
+### Check Elements Method
+```javascript
+// creates a callback function to check if a student is at the correct age
+const checkAge = (studentAge) => studentAge >= 5 && studentAge <= 18;
+ 
+function enroleStudent(studentNames, studentAges) {
+  validator.checkArrayElements(studentAges, "studentAges", checkAge, "Age must be between 5 - 18");
+  // ...
+}
+```
+
+### Object Structure Method
+```javascript
+// creates constructors
+class Hobbie {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+class Money {
+  constructor(amount) {
+    this.amount = amount;
+  }
+}
+ 
+function findPerson(person) {
+  // checks structure of person object
+  validator.checkObjectStructure(person, "person", {
+    name: new String,
+    age: new Number,
+    friends: new Array,
+    hair: {
+      color: new String
+    },
+    hobbie: new Hobbie("name"),
+    makeMoney: Money
+  });
+  // ...
+}
+   
+findPerson({
+  name: "Jack",
+  age: 30,
+  friends: ["John", "Ben"],
+  hair: {
+    color: "black"
+  },
+  hobbie: new Hobbie("tennis"),
+  makeMoney: Money
+});
 ```
