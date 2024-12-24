@@ -282,6 +282,8 @@ const validator = {
      * When defining the datatype of a property you will have to get the constructor of that type and set it as a new instance 
      * of that constructor. When defining a string datatype you have to define it as `new String`.
      * 
+     * If you want to define the value of a property to be anything then assign the value: "*" to the property on the structure object.
+     * 
      * If you want to define the value of a property as a constructor then you can just define it like: `{property}: {constructor}`
      * 
      * The differences of defining the value as a constructor to a instance is when defining an instance you use the new keyword, also 
@@ -344,43 +346,53 @@ const validator = {
                 `'${objectName}' object argument was provided a property '${key}' which violates the required structure`
             );
 
-            // if the datatype must be string then the func holds the value [Function: String]
-            const func = structure[key];
+            // if the datatype must be string then the structureValue holds the value [Function: String]
+            const structureValue = structure[key];
 
-            // checks if value is a instance or constructor
-            if (value.constructor) {
-
-                // checks if the required value is a constructor and that the provided value isn't the constructor
-                if (structure[key].constructor.name === "Function" && value.name !== structure[key].name) throw new Error(
-                    `'${objectName}' object argument is required to be provided the value of '${structure[key].name}' constructor`
-                );
-
-                // checks if the property value is the correct instance type
-                if (structure[key].constructor.name !== value.constructor.name) throw new Error(
-                    `
-                    '${objectName}' object argument is required to be provided the value of an instance of the 
-                    '${structure[key].constructor.name}' constructor
-                    `
-                );
-            }
+            // checks if the value of property can be anything
+            if (structureValue === "*") {}
 
             // checks if property is array and required structure isn't
             else if (Array.isArray(value)) {
-                if (!Array.isArray(structure[key])) throw new Error(
+                if (!Array.isArray(structureValue)) throw new Error(
                     `'${objectName}' object argument was provided for property '${key}' an array value which violates the required 
                     structure`
                 );
             }
 
+            // checks if structure required value of an array but property wasn't provided a value of array
+            else if (!Array.isArray(value)) {
+                if (Array.isArray(structureValue)) throw new Error(
+                    `'${objectName}' object argument must be provided for property '${key}' an array`
+                );
+            }
+
             // check if property is a object
             // if so it loops through that object by calling this function
-            else if (typeof value === "object" && typeof structure[key] === "object") this.checkObjectStructure(
-                object[key], `${objectName}.${key}`, structure[key]
+            else if (typeof value === "object" && typeof structureValue === "object") this.checkObjectStructure(
+                object[key], `${objectName}.${key}`, structureValue
             );
 
+            // checks if value is a instance or constructor
+            else if (value.constructor) {
+
+                // checks if the required value is a constructor and that the provided value isn't the constructor
+                if (structureValue.constructor.name === "Function" && value.name !== structureValue.name) throw new Error(
+                    `'${objectName}' object argument is required to be provided the value of '${structureValue.name}' constructor`
+                );
+
+                // checks if the property value is the correct instance type
+                if (structureValue.constructor.name !== value.constructor.name) throw new Error(
+                    `
+                    '${objectName}.${key}' object argument is required to be provided the value of an instance of the 
+                    '${structureValue.constructor.name}' constructor
+                    `
+                );
+            }
+
             // checks if the value of property is the correct datatype specified in structure
-            // to check if it is the correct datatype of get the name of the func and convert it to lower case
-            else if (typeof value !== func.name.toLowerCase()) throw new Error(
+            // to check if it is the correct datatype of get the name of the structureValue and convert it to lower case
+            else if (typeof value !== structureValue.name.toLowerCase()) throw new Error(
                 `'${objectName}' object argument was provided a datatype of ${typeof value} for property '${key}' which violates the 
                 required structure`
             );
@@ -392,6 +404,90 @@ const validator = {
             // checks if object doesn't have required property
             if (!Object.hasOwn(object, key)) throw new Error(`'${objectName}' object argument missing required property '${key}'`);
         });
+    },
+
+    /**
+     * Used to loop through provided array `objects` to check if objects fulfills the required `structure`. If not a error is thown.
+     * 
+     * `objectNames` is used to specify which `object` argument didn't fulfill the required `structure`.
+     * 
+     * `structure` is used to define the required structure of the provided `object`. It determines the required properties and what 
+     * datatypes those properties require.
+     * 
+     * When defining the datatype of a property you will have to get the constructor of that type and set it as a new instance 
+     * of that constructor. When defining a string datatype you have to define it as `new String`.
+     * 
+     * If you want to define the value of a property to be anything then assign the value: "*" to the property on the structure object.
+     * 
+     * If you want to define the value of a property as a constructor then you can just define it like: `{property}: {constructor}`
+     * 
+     * The differences of defining the value as a constructor to a instance is when defining an instance you use the new keyword, also 
+     * if defining an instance and the constructor required arguments you will have to provided them, the value can be anything as 
+     * long as it is the correct datatype.
+     * 
+     * Example:
+     * 
+     *      // creates constructors
+     *      class Hobbie {
+     *          constructor(name) {
+     *              this.name = name;
+     *          }
+     *      }
+     * 
+     *      class Money {
+     *          constructor(amount) {
+     *              this.amount = amount;
+     *          }
+     *      }
+     * 
+     *      function findPeople(people) {
+     *          // checks structure of person object
+     *          validator.checkObjectStructureArray(people, "people", {
+     *              name: new String,
+     *              age: new Number,
+     *              friends: new Array,
+     *              hair: {
+     *                  color: new String
+     *              },
+     *              hobbie: new Hobbie("name"),
+     *              makeMoney: Money
+     *          });
+     *          // ...
+     *      }
+     * 
+     *      findPeople([
+     *          {
+     *              name: "Jack",
+     *              age: 30,
+     *              friends: ["John", "Ben"],
+     *              hair: {
+     *                  color: "black"
+     *              },
+     *              hobbie: new Hobbie("tennis"),
+     *              makeMoney: Money
+     *          },
+     *          {
+     *              name: "Henry",
+     *              age: 42,
+     *              friends: ["Steve", "Ken"],
+     *              hair: {
+     *                  color: "brown"
+     *              },
+     *              hobbie: new Hobbie("football"),
+     *              makeMoney: Money
+     *          }
+     *      ]);
+     * 
+     * @param {Array<object>} objects 
+     * @param {Array<String>} objectNames 
+     * @param {object} structure 
+     */
+    checkObjectStructureArray: function (objects, objectNames, structure) {
+        if (objects.length !== objectNames.length) throw new Error("Amount of objects and object names must be equal");
+        
+        for (let i = 0; i < objects.length; i++) {
+            this.checkObjectStructure(objects[i], objectNames[i], structure);
+        }
     }
 }
 

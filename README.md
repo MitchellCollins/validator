@@ -24,6 +24,7 @@ The `validator` has multiply methods these include:
 - `checkArrayLength` - checks if the length of an array is equal to a specified target length
 - `checkArrayElements` - checks if all elements of an array fulfill a specified condition
 - `checkObjectStructure` - checks if the structure of an object fulfill the specified structure
+- `checkObjectStructureArray` - checks if an array of objects fulfill the specified structure
 
 ## Explanation
 The `checkSuperClass` and `checkSuperClassArray` methods require that you create a attribute that holds the name of the super class which has a getter method: `getSuper`.
