@@ -35,8 +35,8 @@ const validator = {
      * 
      * `variableName` is used to specify which argument was left undefined.
      * 
-     * @param {*} variable 
-     * @param {String} variableName
+     * @param {*} variable the variable that will be check if undefined
+     * @param {String} variableName the name of the `variable`
      */
     checkUndefined: function (variable, variableName) {
         if (variable === undefined) throw new Error(`'${variableName}' Argument left Undefined`);
@@ -57,8 +57,8 @@ const validator = {
      *          return num1 + num2;
      *      }
      * 
-     * @param {Array<*>} variables
-     * @param {Array<String>} variableNames 
+     * @param {Array<*>} variables an array of variables that will all be check if undefined
+     * @param {Array<String>} variableNames an array of the variable names in the `variables` array
      */
     checkUndefinedArray: function (variables, variableNames) {
         if (variables.length !== variableNames.length) throw new Error("Amount of variables and variable names must be equal");
@@ -74,9 +74,9 @@ const validator = {
      * 
      * `variableName` is used to specify which argument was provided the incorrect datatype.
      * 
-     * @param {*} variable 
-     * @param {String} variableName
-     * @param {String} dataType 
+     * @param {*} variable the variable that will be check if it has the correct datatype value 
+     * @param {String} variableName the name of the `variable`
+     * @param {String} dataType the datatype that the `variable` must have
      */
     checkDataType: function (variable, variableName, dataType) {
         if (typeof variable !== dataType) throw new Error(`Must provide ${dataType} datatype for '${variableName}' Argument`);
@@ -98,9 +98,9 @@ const validator = {
      *          return num1 + num2;
      *      }
      * 
-     * @param {Array<*>} variables 
-     * @param {Array<String>} variableNames
-     * @param {String} dataType 
+     * @param {Array<*>} variables an array of variables that will all be check if they have the correct datatype
+     * @param {Array<String>} variableNames an array of variable names for the variables in the `variables` array
+     * @param {String} dataType the datatype that the `variables` must have
      */
     checkDataTypeArray: function (variables, variableNames, dataType) {
         if (variables.length !== variableNames.length) throw new Error("Amount of variables and variable names must be equal");
@@ -116,9 +116,9 @@ const validator = {
      * 
      * `instanceName` is used to specify which argument was provided the incorrect instancetype.
      * 
-     * @param {InstanceType<*>} instance 
-     * @param {String} instanceName
-     * @param {String} instanceType 
+     * @param {InstanceType<*>} instance the instance that will be check if is the correct instancetype
+     * @param {String} instanceName the name of the `instance`
+     * @param {String} instanceType the instancetype the `instance` must be
      */
     checkInstanceType: function (instance, instanceName, instanceType) {
         if (instance.constructor.name !== instanceType) throw new Error(`
@@ -140,9 +140,9 @@ const validator = {
      *          // ...
      *      }
      * 
-     * @param {Array<InstanceType<*>>} instances 
-     * @param {Array<String>} instanceNames
-     * @param {String} instanceType 
+     * @param {Array<InstanceType<*>>} instances an array of instances that will all be check are the correct instancetype
+     * @param {Array<String>} instanceNames an array of names for the instances in the `instances` array
+     * @param {String} instanceType the instancetype the `instances` must be
      */
     checkInstanceTypeArray: function (instances, instanceNames, instanceType) {
         if (instances.length !== instanceNames.length) throw new Error("Amount of instances and instance names must be equal");
@@ -166,9 +166,9 @@ const validator = {
      * 
      * `instanceName` is used to specify which argument was provided the incorrect child instancetype of a super class.
      * 
-     * @param {InstanceType<*>} instance 
-     * @param {String} instanceName
-     * @param {String} superClass 
+     * @param {InstanceType<*>} instance a instance that will be check if it is the instance of the correct super class
+     * @param {String} instanceName the name of the `instance`
+     * @param {String} superClass the super class the `instance` must be an instance of
      */
     checkSuperClass: function (instance, instanceName, superClass) {
         if (instance.getSuper() !== superClass) throw new Error(
@@ -198,9 +198,9 @@ const validator = {
      *          // ...
      *      }
      * 
-     * @param {Array<InstanceType<*>>} instances 
-     * @param {Array<String>} instanceNames
-     * @param {String} superClass 
+     * @param {Array<InstanceType<*>>} instances an array of instances that will all be check are the instance of the correct super class
+     * @param {Array<String>} instanceNames an array of names for the instances in the `instances` array
+     * @param {String} superClass the super class the `instances` must be the instance of
      */
     checkSuperClassArray: function (instances, instanceNames, superClass) {
         if (instances.length !== instanceNames.length) throw new Error("Amount of instances and instance names must be equal");
@@ -215,8 +215,8 @@ const validator = {
      * 
      * `arrayName` is used to specify which argument was not provided a value of an array.
      * 
-     * @param {*} array 
-     * @param {String} arrayName 
+     * @param {*} array is a variable that is check if it has the value of an array
+     * @param {String} arrayName the name of the `array` that is checked
      */
     checkIsArray: function (array, arrayName) {
         if (!Array.isArray(array)) throw new Error(`Must provide an array for '${arrayName}' Argument`);
@@ -227,9 +227,9 @@ const validator = {
      * 
      * `arrayName` is used to specify which argument was not provided an array that has the required `targetLength`.
      * 
-     * @param {*} array 
-     * @param {String} arrayName 
-     * @param {Int} targetLength 
+     * @param {*} array an array that is check fulfills a required length
+     * @param {String} arrayName the name of the `array`
+     * @param {Int} targetLength the required length the `array` must be
      */
     checkArrayLength: function (array, arrayName, targetLength) {
         if (array.length !== targetLength) throw new Error(
@@ -271,10 +271,10 @@ const validator = {
      *          // ...
      *      }
      * 
-     * @param {Array<*>} array 
-     * @param {String} arrayName 
-     * @param {CallableFunction} callback 
-     * @param {String} condition 
+     * @param {Array<*>} array an array of elements that will be check if that fulfill a `condition`
+     * @param {String} arrayName the name of the `array`
+     * @param {Function} callback a callback function that checks if elements fulfill a condition
+     * @param {String} condition the condition that the elements in the `array` must fulfill
      */
     checkArrayElements: function (array, arrayName, callback, condition) {
         array.forEach((element, index) => {
@@ -348,9 +348,9 @@ const validator = {
      *          }
      *      );
      * 
-     * @param {object} object 
-     * @param {String} objectName 
-     * @param {object} structure 
+     * @param {object} object a object that will be check if it fulfills required `structure`
+     * @param {String} objectName the name of the `object`
+     * @param {object} structure the structure that the `object` must fulfill
      */
     checkObjectStructure: function (object, objectName, structure) {
         // loops through each property of the object
@@ -493,9 +493,9 @@ const validator = {
      *          }
      *      ]);
      * 
-     * @param {Array<object>} objects 
-     * @param {Array<String>} objectNames 
-     * @param {object} structure 
+     * @param {Array<object>} objects an array of objects that will be check if they fulfill a required `structure`
+     * @param {Array<String>} objectNames an array of names for the objects in the `objects` array
+     * @param {object} structure the required structure the `objects` must fulfill
      */
     checkObjectStructureArray: function (objects, objectNames, structure) {
         if (objects.length !== objectNames.length) throw new Error("Amount of objects and object names must be equal");

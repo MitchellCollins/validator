@@ -22,6 +22,7 @@ The `validator` has multiply methods these include:
 - `checkSuperClassArray` - checks each instance in a array if they are the child of the requested super class
 - `checkIsArray` - checks if a varaible has the value that is an array
 - `checkArrayLength` - checks if the length of an array is equal to a specified target length
+- `checkIndexRange` - checks if a provided index is within the range of an array
 - `checkArrayElements` - checks if all elements of an array fulfill a specified condition
 - `checkObjectStructure` - checks if the structure of an object fulfill the specified structure
 - `checkObjectStructureArray` - checks if an array of objects fulfill the specified structure
