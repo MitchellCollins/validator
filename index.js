@@ -238,6 +238,21 @@ const validator = {
     },
 
     /**
+     * Used to check if a provided `index` is within the range of an `array`. If not a error is thrown.
+     * 
+     * `arrayName` is used to specify which array the provided `index` is out of range for.
+     * 
+     * @param {Array<*>} array the array that the `index` must be in range of
+     * @param {String} arrayName the name of the `array`
+     * @param {Int} index the provided index that must be in the range of `array`
+     */
+    checkIndexRange: function (array, arrayName, index) {
+        if (index < 0 || index > array.length - 1) throw new Error(
+            `Index was not in range of ${arrayName} array`
+        );
+    },
+
+    /**
      * Used to check if every element of an `array` fulfills a `condition`. If not a error is thrown.
      * 
      * `arrayName` is used to specify which argument has an element that doesn't fufill a `condition`.
