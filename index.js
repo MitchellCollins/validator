@@ -368,7 +368,7 @@ const validator = {
             if (structureValue === "*") {}
 
             // checks if property is array and required structure isn't
-            if (Array.isArray(value) && !Array.isArray(structureValue)) throw new Error(
+            else if (Array.isArray(value) && !Array.isArray(structureValue)) throw new Error(
                 `'${objectName}' object argument was provided for property '${key}' an array value which violates the required 
                 structure`
             );
