@@ -361,55 +361,38 @@ const validator = {
                 `'${objectName}' object argument was provided a property '${key}' which violates the required structure`
             );
 
-            // if the datatype must be string then the structureValue holds the value [Function: String]
+            // gets the required value that is set to the property in the structure
             const structureValue = structure[key];
-
+            
             // checks if the value of property can be anything
             if (structureValue === "*") {}
 
             // checks if property is array and required structure isn't
-            else if (Array.isArray(value)) {
-                if (!Array.isArray(structureValue)) throw new Error(
-                    `'${objectName}' object argument was provided for property '${key}' an array value which violates the required 
-                    structure`
-                );
-            }
-
+            if (Array.isArray(value) && !Array.isArray(structureValue)) throw new Error(
+                `'${objectName}' object argument was provided for property '${key}' an array value which violates the required 
+                structure`
+            );
+            
             // checks if structure required value of an array but property wasn't provided a value of array
-            else if (!Array.isArray(value)) {
-                if (Array.isArray(structureValue)) throw new Error(
-                    `'${objectName}' object argument must be provided for property '${key}' an array`
-                );
-            }
+            else if (!Array.isArray(value) && Array.isArray(structureValue)) throw new Error(
+                `'${objectName}' object argument must be provided for property '${key}' an array`
+            );
 
             // check if property is a object
-            // if so it loops through that object by calling this function
+            // if so loops through that object by calling this function
             else if (typeof value === "object" && typeof structureValue === "object") this.checkObjectStructure(
                 object[key], `${objectName}.${key}`, structureValue
             );
 
-            // checks if value is a instance or constructor
-            else if (value.constructor) {
+            // checks if the required value is a constructor and that the provided value isn't the required constructor
+            else if (structureValue.constructor.name === "Function" && value.name !== structureValue.name) throw new Error(
+                `'${objectName}' object argument is required to be provided for property '${key}' the value of '${structureValue.name}' constructor`
+            );
 
-                // checks if the required value is a constructor and that the provided value isn't the constructor
-                if (structureValue.constructor.name === "Function" && value.name !== structureValue.name) throw new Error(
-                    `'${objectName}' object argument is required to be provided the value of '${structureValue.name}' constructor`
-                );
-
-                // checks if the property value is the correct instance type
-                if (structureValue.constructor.name !== value.constructor.name) throw new Error(
-                    `
-                    '${objectName}.${key}' object argument is required to be provided the value of an instance of the 
-                    '${structureValue.constructor.name}' constructor
-                    `
-                );
-            }
-
-            // checks if the value of property is the correct datatype specified in structure
-            // to check if it is the correct datatype of get the name of the structureValue and convert it to lower case
-            else if (typeof value !== structureValue.name.toLowerCase()) throw new Error(
-                `'${objectName}' object argument was provided a datatype of ${typeof value} for property '${key}' which violates the 
-                required structure`
+            // checks if the required value is a instance and if the provided value is the correct instance type
+            else if (structureValue.constructor.name !== "Function" && structureValue.constructor.name !== value.constructor.name) throw new Error(
+                `'${objectName}' object argument is required to be provided for property '${key}' the value of an instance of the 
+                '${structureValue.constructor.name}' constructor`
             );
         });
 
