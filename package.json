@@ -1,6 +1,6 @@
 {
   "name": "@mitchell-collins/validator",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Used to validate inputs",
   "main": "index.js",
   "type": "module",
