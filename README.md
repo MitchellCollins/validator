@@ -26,6 +26,8 @@ The `validator` has multiply methods these include:
 - `checkArrayElements` - checks if all elements of an array fulfill a specified condition
 - `checkObjectStructure` - checks if the structure of an object fulfill the specified structure
 - `checkObjectStructureArray` - checks if an array of objects fulfill the specified structure
+- `checkIsHttpStatusCode` - checks if a variable has the value of a http status code
+- `checkEnumValue` - checks if a variable has the value of one of the constants of a enum
 
 ## Explanation
 The `checkSuperClass` and `checkSuperClassArray` methods require that you create a attribute that holds the name of the super class which has a getter method: `getSuper`.
