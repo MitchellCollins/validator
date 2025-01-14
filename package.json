@@ -1,6 +1,6 @@
 {
   "name": "@mitchell-collins/validator",
-  "version": "1.4.7",
+  "version": "1.5.7",
   "description": "Used to validate inputs",
   "main": "index.js",
   "type": "module",
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/MitchellCollins/validator/issues"
   },
-  "homepage": "https://github.com/MitchellCollins/validator#readme"
+  "homepage": "https://github.com/MitchellCollins/validator#readme",
+  "dependencies": {
+    "http-status-codes-minimal": "^1.1.15"
+  }
 }
