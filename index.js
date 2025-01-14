@@ -1,3 +1,5 @@
+import { StatusCodes } from "http-status-codes-minimal";
+
 /**
  * The `validator` is used to validate inputs.
  * 
@@ -488,6 +490,35 @@ const validator = {
         for (let i = 0; i < objects.length; i++) {
             this.checkObjectStructure(objects[i], objectNames[i], structure);
         }
+    },
+
+    /**
+     * Checks if the value of `variable` is a http status code. If not a error is thrown.
+     * 
+     * `variableName` is used to define which variable didn't have the value of a http status code.
+     * 
+     * @param {*} variable the variable that will be check if it has the value of a http status code
+     * @param {String} variableName the name of the `variable`
+     */
+    checkIsHttpStatusCode(variable, variableName) {
+        if (!Object.values(StatusCodes).includes(variable)) throw new Error(
+            `Must provided value of Http status code for argument '${variableName}'`
+        );
+    },
+
+    /**
+     * Checks if a `variable` has the value of an `enumObject`. If not a error is thrown.
+     * 
+     * `enumName` and `variableName` are used to define which variable must have a value of which enum.
+     * @param {Enumerator} enumObject an enum which the `variable` must have a value of one of its constants
+     * @param {String} enumName the name of the `enumObject`
+     * @param {*} variable the variable that will be check if it has the value of the `enumObject`
+     * @param {String} variableName the name of the `variable`
+     */
+    checkEnumValue(enumObject, enumName, variable, variableName) {
+        if (!Object.values(enumObject).includes(variable)) throw new Error(
+            `Must provided a value of enum '${enumName}' for argument '${variableName}'`
+        );
     }
 }
 
