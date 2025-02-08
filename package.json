@@ -1,9 +1,17 @@
 {
   "name": "@mitchell-collins/validator",
-  "version": "1.5.8",
+  "version": "1.6.8",
   "description": "Used to validate inputs",
   "main": "index.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "default": {
+        "require": "./index.cjs",
+        "default": "./index.js"
+      }
+    }
+  },
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
